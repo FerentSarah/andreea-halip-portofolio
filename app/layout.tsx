@@ -17,13 +17,17 @@ const specialElite = Special_Elite({
 });
 
 export const metadata = {
-  title: 'Andreea Halip — Architect',
-  description: 'Andreea Halip is an architect working across residential, cultural, landscape, and housing projects.',
+  title: 'Andreea Halip — Architecture student, Cluj-Napoca',
+  description: 'Andreea Halip is an architecture student at the Technical University of Cluj-Napoca, Romania.',
   openGraph: {
-    title: 'Andreea Halip — Architect',
-    description: 'Architecture portfolio and project studies by Andreea Halip.',
+    title: 'Andreea Halip — Architecture student, Cluj-Napoca',
+    description: 'Architecture portfolio and studies by Andreea Halip.',
     type: 'website',
-  }
+    url: 'https://www.andreeahalip.com',
+  },
+  alternates: {
+    canonical: 'https://www.andreeahalip.com',
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

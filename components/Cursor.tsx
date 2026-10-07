@@ -1,4 +1,5 @@
 "use client";
+
 import { useEffect, useState } from 'react';
 
 export default function Cursor() {
@@ -6,49 +7,43 @@ export default function Cursor() {
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const updateMotionPreference = () => setIsReducedMotion(mediaQuery.matches);
+    const pointerQuery = window.matchMedia('(pointer: coarse)');
 
+    const updateMotionPreference = () => setIsReducedMotion(mediaQuery.matches);
     updateMotionPreference();
     mediaQuery.addEventListener('change', updateMotionPreference);
 
-    if (isReducedMotion) {
+    if (mediaQuery.matches || pointerQuery.matches) {
       return () => mediaQuery.removeEventListener('change', updateMotionPreference);
     }
 
     const cur = document.createElement('div');
     cur.id = 'cur';
-    cur.innerHTML = '<div id="cur-dot"></div><span id="cur-label">VIEW</span>';
+    cur.innerHTML = '<div id="cur-dot"></div>';
     document.body.appendChild(cur);
 
-    const move = (event: MouseEvent) => {
+    const handleMove = (event: MouseEvent) => {
       cur.style.left = `${event.clientX}px`;
       cur.style.top = `${event.clientY}px`;
+      const hot = !!(event.target as HTMLElement | null)?.closest?.('.icon-box, .menu-item, .back-arrow, .hot-target');
+      cur.classList.toggle('hot', hot);
     };
 
-    const setView = (target: HTMLElement | null, active: boolean) => {
-      if (!target) return;
-      target.classList.toggle('view', active);
-    };
+    const handleMouseDown = () => cur.classList.add('pulse');
+    const handleMouseUp = () => cur.classList.remove('pulse');
 
-    const interactiveTargets = document.querySelectorAll('.project-icon-box, .menu-item, .back-arrow, .project-card');
-
-    interactiveTargets.forEach((element) => {
-      element.addEventListener('mouseenter', () => setView(cur, true));
-      element.addEventListener('mouseleave', () => setView(cur, false));
-    });
-
-    window.addEventListener('mousemove', move);
-    window.addEventListener('mousedown', () => cur.classList.add('pulse'));
-    window.addEventListener('mouseup', () => cur.classList.remove('pulse'));
+    window.addEventListener('mousemove', handleMove);
+    window.addEventListener('mousedown', handleMouseDown);
+    window.addEventListener('mouseup', handleMouseUp);
 
     return () => {
       mediaQuery.removeEventListener('change', updateMotionPreference);
-      window.removeEventListener('mousemove', move);
-      window.removeEventListener('mousedown', () => cur.classList.add('pulse'));
-      window.removeEventListener('mouseup', () => cur.classList.remove('pulse'));
+      window.removeEventListener('mousemove', handleMove);
+      window.removeEventListener('mousedown', handleMouseDown);
+      window.removeEventListener('mouseup', handleMouseUp);
       cur.remove();
     };
-  }, [isReducedMotion]);
+  }, []);
 
   if (typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches) {
     return null;
