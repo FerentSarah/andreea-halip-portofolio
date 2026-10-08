@@ -25,7 +25,7 @@ export default function Cursor() {
     const handleMove = (event: MouseEvent) => {
       cur.style.left = `${event.clientX}px`;
       cur.style.top = `${event.clientY}px`;
-      const hot = !!(event.target as HTMLElement | null)?.closest?.('.icon-box, .menu-item, .back-arrow, .hot-target');
+      const hot = !!(event.target as HTMLElement | null)?.closest?.('.icon-box, .menu-item, .back-arrow, .site-name, .page-title-link, .hot-target');
       cur.classList.toggle('hot', hot);
     };
 
